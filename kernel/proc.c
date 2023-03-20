@@ -295,6 +295,8 @@ fork(void)
 
   np->state = RUNNABLE;
 
+  np->syscallnum = p->syscallnum;// 将 父进程 p 的 syscallnum 掩码复制一份给子进程
+
   release(&np->lock);
 
   return pid;
