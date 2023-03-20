@@ -213,7 +213,7 @@ userinit(void)
 {
   struct proc *p;
 
-  p = allocproc();
+  p = allocproc(); // 在页表中分配一个槽（即结构体 struct proc），并初始化进程的状态，为其内核线程的运行做准备。
   initproc = p;
   
   // allocate one user page and copy init's instructions
