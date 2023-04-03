@@ -105,6 +105,7 @@ extern uint64 sys_wait(void);
 extern uint64 sys_write(void);
 extern uint64 sys_uptime(void);
 extern uint64 sys_trace(void);// 声明在 sysproc.c 中定义的系统调用 sys_trace
+extern uint64 sys_sysinfo(void); // 声明在 sysproc.c 中定义的系统调用 sys_sysinfo
 
 static uint64 (*syscalls[])(void) = {
     // syscalls是一个函数指针数组，定义中 [索引] 元素，表示在元素在该索引处，这是一个存放函数指针的数组
@@ -129,15 +130,16 @@ static uint64 (*syscalls[])(void) = {
     [SYS_link] sys_link,
     [SYS_mkdir] sys_mkdir,
     [SYS_close] sys_close,
-    [SYS_trace] sys_trace, // 添加 sys_trace
+    [SYS_trace] sys_trace,     // 添加 sys_trace
+    [SYS_sysinfo] sys_sysinfo, // 添加 sys_info
 };
 
 void syscall(void)
 {
   int num;
   struct proc *p = myproc(); // 获取当前的 proc 结构体信息
-  char *syscall_name[22] = {"fork", "exit", "wait", "pipe", "read", "kill", "exec", "fstat", "chdir", "dup", "getpid", "sbrk", "sleep", "uptime", "open", "write", "mknod", "unlink", "link", "mkdir", "close", "trace"};
-  // 定义了 22 种系统调用的名字，在后面打印输出的时候用到，这里存放系统调用的顺序与上面定义的函数指针数组有关系
+  char *syscall_name[23] = {"fork", "exit", "wait", "pipe", "read", "kill", "exec", "fstat", "chdir", "dup", "getpid", "sbrk", "sleep", "uptime", "open", "write", "mknod", "unlink", "link", "mkdir", "close", "trace", "sysinfo"};
+  // 定义了 23 种系统调用的名字，在后面打印输出的时候用到，这里存放系统调用的顺序与上面定义的函数指针数组有关系
 
   num = p->trapframe->a7;
   if (num > 0 && num < NELEM(syscalls) && syscalls[num])

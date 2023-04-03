@@ -1,5 +1,6 @@
 struct stat;
 struct rtcdate;
+struct sysinfo;//声明在 kenel/sysinfo.h 中定义的结构体sysinfo
 
 // system calls
 int fork(void);
@@ -24,6 +25,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int trace(int);// 注册声明 trace 函数
+int sysinfo(struct sysinfo *);// 声明 sysinfo 函数
 
 // ulib.c
 int stat(const char*, struct stat*);

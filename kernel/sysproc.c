@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "sysinfo.h" // 添加 sysinfo.h 头文件
 
 uint64
 sys_exit(void)
@@ -106,5 +107,21 @@ sys_trace(void) // 在这里添加 系统调用 sys_trace
   if (argint(0, &n) < 0) // 获取掩码
     return -1;
   myproc()->syscallnum = n; // 将掩码保存到 proc.h 中的结构体 proc 中的新定义变量 syscallnum 中
+  return 0;
+}
+
+uint64
+sys_sysinfo(void) // 在这里添加 系统调用 sys_sysinfo
+{
+  uint64 sysinfop; // 系统信息结构指针的存放地址
+  struct sysinfo si;
+
+  if (argaddr(0, &sysinfop) < 0)//函数的定义在 kernel/syscall.c中 读取a0寄存器的数据放到先前定义的sysinfop中 
+    return -1;
+  si.freemem = freememsize(); // 获取空闲内存的大小，在kernel/kalloc.c中实现
+  si.nproc = nproc_active();  // 获取没有用到的进程的数量，在kernel/proc.c中实现
+  if (copyout(myproc()->pagetable, sysinfop, (char *)&si, sizeof(si)) < 0)
+    // 将sysinfo struct si从内核空间复制到用户空间 ,可以参考 kernel/vm.c 
+    return -1;
   return 0;
 }

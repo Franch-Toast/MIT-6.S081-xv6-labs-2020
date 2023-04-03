@@ -695,3 +695,16 @@ procdump(void)
     printf("\n");
   }
 }
+
+//获取未被使用的进程
+int nproc_active()
+{
+  int i;
+  int num = 0;
+  for (i = 0; i < NPROC; i++) // #define NPROC 64  进程的最大数量
+  {
+    if (proc[i].state != UNUSED)
+      num++;
+  }
+  return num;
+}
